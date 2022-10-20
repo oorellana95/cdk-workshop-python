@@ -71,15 +71,16 @@ jobs:
         run: 'sudo npm install -g aws-cdk'
 
       - name: Virtual Environment
-        run: make venv
-
-      - name: App dependencies
-        run: make app-dependencies
+        run: |
+          make venv
+          make app-dependencies
+          source venv/bin/activate
 
       - name: CDK Diff
-        run: |
-          cdk diff
+        run: cdk diff
+
+      - name: CDK Synth
+        run: cdk synth
 
       - name: CDK Deploy
-        run: |
-          cdk --require-approval=never deploy '*'
+        run: cdk --require-approval=never deploy '*'
