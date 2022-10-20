@@ -36,16 +36,18 @@ jobs:
     needs:
       - lint-tests
     runs-on: ubuntu-latest
-
+    permissions:
+      id-token: write
+      contents: read
     env:
       AWS_DEFAULT_REGION: us-east-1
-      AWS_ROLE_ID_NUMBER: ${{ secrets.ROLE_ID_NUMBER }}
-      AWS_ROLE_NAME: ${{ secrets.ROLE_NAME }}
+      AWS_ROLE_ID_NUMBER: ${{ secrets.AWS_ROLE_ID_NUMBER }}
+      AWS_ROLE_NAME: ${{ secrets.AWS_ROLE_NAME }}
       ENVIRONMENT: prod
 
     steps:
       - name: Configure Aws Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@master
         with:
           role-to-assume: arn:aws:iam::${{ ENV.AWS_ROLE_ID_NUMBER }}:role/${{ env.AWS_ROLE_NAME }}
           role-session-name: ${{ env.AWS_ROLE_NAME }}-${{env.ENVIRONMENT}}
