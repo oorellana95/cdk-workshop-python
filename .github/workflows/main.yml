@@ -70,10 +70,11 @@ jobs:
       - name: Install AWS CDK
         run: 'sudo npm install -g aws-cdk'
 
+      - name: Virtual Environment
+        run: make venv
+
       - name: App dependencies
-        run: |
-          pip install -U pip poetry
-          poetry install --no-dev
+        run: make app-dependencies
 
       - name: CDK Diff
         run: |
