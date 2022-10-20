@@ -15,7 +15,9 @@ class HitCounter(Construct):
     def table(self):
         return self._table
 
-    def __init__(self, scope: Construct, id: str, downstream: _lambda.IFunction, **kwargs):
+    def __init__(self, scope: Construct, id: str, downstream: _lambda.IFunction, read_capacity: int = 5, **kwargs):
+        if read_capacity < 5 or read_capacity > 20:
+            raise ValueError("readCapacity must be greater than 5 or less than 20")
         super().__init__(scope, id, **kwargs)
 
         # We defined a DynamoDB table with path as the partition key (every DynamoDB table must
@@ -23,7 +25,8 @@ class HitCounter(Construct):
         self._table = ddb.Table(
             self, 'Hits',
             partition_key={'name': 'path', 'type': ddb.AttributeType.STRING},
-            encryption=ddb.TableEncryption.AWS_MANAGED
+            encryption=ddb.TableEncryption.AWS_MANAGED,
+            read_capacity=read_capacity,
         )
 
         # We defined a Lambda function which is bound to the lambda/hitcount.handler code.
