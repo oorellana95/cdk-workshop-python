@@ -67,6 +67,11 @@ jobs:
           pip install -U pip poetry
           poetry install --no-dev
 
+      - name: App dependencies
+        run: |
+          pip install -U pip poetry
+          poetry install --no-dev
+
       - name: CDK Diff ${{ env.ENVIRONMENT }}
         run: |
           cdk diff
