@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "cdk-workshop"
+version = "0.1.0"
+description = "CDK Workshop"
+authors = ["Oscar Orellana"]
+
+[tool.poetry.dependencies]
+python = "3.10.*"
+constructs = "10.*"
+aws-cdk-lib = "*"
+boto3 = "*"
+cdk-dynamo-table-view = "*"
+
+[tool.poetry.dev-dependencies]
+pytest = "*"
+pytest-cov = "*"
+pylint = "*"
+flake8 = "*"
+black = "*"
+isort = "*"
+coverage = "*"
+coverage-badge = "*"
+
