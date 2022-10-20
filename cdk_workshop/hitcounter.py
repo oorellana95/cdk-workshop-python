@@ -11,12 +11,16 @@ class HitCounter(Construct):
     def handler(self):
         return self._handler
 
+    @property
+    def table(self):
+        return self._table
+
     def __init__(self, scope: Construct, id: str, downstream: _lambda.IFunction, **kwargs):
         super().__init__(scope, id, **kwargs)
 
         # We defined a DynamoDB table with path as the partition key (every DynamoDB table must
         # have a single partition key).
-        table = ddb.Table(
+        self._table = ddb.Table(
             self, 'Hits',
             partition_key={'name': 'path', 'type': ddb.AttributeType.STRING}
         )
@@ -30,9 +34,9 @@ class HitCounter(Construct):
             # We wired the Lambda’s environment variables to the function_name and table_name of our resources.
             environment={
                 'DOWNSTREAM_FUNCTION_NAME': downstream.function_name,
-                'HITS_TABLE_NAME': table.table_name,
+                'HITS_TABLE_NAME': self._table.table_name,
             }
         )
 
-        table.grant_read_write_data(self._handler)
+        self._table.grant_read_write_data(self._handler)
         downstream.grant_invoke(self._handler)
