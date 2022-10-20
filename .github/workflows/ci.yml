@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [ "3.7", "3.8", "3.9", "3.10" ]
+        python-version: [ "3.10" ]
 
     steps:
       - name: Checkout
@@ -18,10 +18,10 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Virtual Environment & All Dependencies
+      - name: Virtual Environment & Dependencies
         run: make install
 
-      - name: Run lint
+      - name: Run Lint
         run: make lint
 
       - name: Run Tests
