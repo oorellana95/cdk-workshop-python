@@ -30,10 +30,12 @@ all-dependencies: app-dependencies dev-dependencies ## install all dependencies
 
 .PHONY: lint
 lint: ## check source code for style errors
-	flake8 . && black . --check
+	(. venv/bin/activate; \
+	flake8 . && black . --check; \
+    )
 
 .PHONY: format
-format: ## automa tic source code formatter following a strict set of standards
+format: ## automatic source code formatter following a strict set of standards
 	isort . --sp .isort.cfg && black .
 
 .PHONY: venv
@@ -46,13 +48,16 @@ venv:  ## creates a virtualenv if does not exist and activates it
 .PHONY: install
 install: venv all-dependencies ## Create venv and install all dependencies
 
-
 .PHONY: tests
 tests:  ## Run unit and integration tests
-	pytest --cov
+	(. venv/bin/activate; \
+	pytest --cov; \
+    )
 
 .PHONY: coverage-report
 coverage-report: ## coverage report of all tests
-	coverage run -m unittest discover
-	coverage html
-	open htmlcov/index.html
+	(. venv/bin/activate; \
+	coverage run -m unittest discover; \
+	coverage html; \
+	open htmlcov/index.html; \
+	)

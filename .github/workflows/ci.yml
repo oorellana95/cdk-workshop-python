@@ -18,13 +18,10 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Virtual Environment & All Dependencies
-        run: make env
+      - name: Virtual Environment & Dependencies
+        run: make install
 
-      - name: All Dependencies
-        run: make all-dependencies
-
-      - name: Run lint
+      - name: Run Lint
         run: make lint
 
       - name: Run Tests

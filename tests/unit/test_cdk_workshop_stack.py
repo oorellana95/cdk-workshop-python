@@ -64,7 +64,7 @@ def test_dynamodb_with_encryption():
             handler="hello.handler",
             code=_lambda.Code.from_asset("lambda"),
         ),
-        read_capacity=15
+        read_capacity=15,
     )
 
     template = assertions.Template.from_stack(stack)
