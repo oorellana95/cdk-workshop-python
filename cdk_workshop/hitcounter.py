@@ -22,7 +22,8 @@ class HitCounter(Construct):
         # have a single partition key).
         self._table = ddb.Table(
             self, 'Hits',
-            partition_key={'name': 'path', 'type': ddb.AttributeType.STRING}
+            partition_key={'name': 'path', 'type': ddb.AttributeType.STRING},
+            encryption=ddb.TableEncryption.AWS_MANAGED
         )
 
         # We defined a Lambda function which is bound to the lambda/hitcount.handler code.
