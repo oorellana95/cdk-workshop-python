@@ -1,9 +1,10 @@
-name: CI
+name: CI workflow
 
 on: [ pull_request ]
 
 jobs:
-  continuous_integration:
+  continuous-integration:
+    name: Lint & Tests
     runs-on: ubuntu-latest
     strategy:
       matrix:

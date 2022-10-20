@@ -1,0 +1,65 @@
+name: Production Deploy AWS
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AWS_DEFAULT_REGION: eu-east-1
+  ENVIRONMENT: prod
+  ENV_USER_ID: 296725071694
+  USER: cdk-stock-investing
+
+jobs:
+  lint-tests:
+    name: Lint & Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ "3.10" ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Virtual Environment & Dependencies
+        run: make install
+
+      - name: Run Lint
+        run: make lint
+
+      - name: Run Tests
+        run: make tests
+
+  deploy:
+    name: Deploy
+    needs:
+      - lint-tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Assume Role
+        uses: youyo/awscredswrap@master
+        with:
+          role_arn: arn:aws:iam::${{ env.ENV_USER_ID }}:user/${{ env.USER }}
+          duration_seconds: 3600
+          role_session_name: ${{ env.ENVIRONMENT }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
+
+      - name: CDK Diff ${{ env.ENVIRONMENT }}
+        run: |
+          cdk diff
+
+      - name: CDK Deploy ${{ env.ENVIRONMENT }}
+        run: |
+          cdk --require-approval=never deploy '*'
