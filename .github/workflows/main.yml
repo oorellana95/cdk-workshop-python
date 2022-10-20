@@ -62,20 +62,16 @@ jobs:
       - name: Install AWS CDK
         run: 'sudo npm install -g aws-cdk'
 
-      - name: App dependencies
-        run: |
-          pip install -U pip poetry
-          poetry install --no-dev
+      - name: Virtual Environment
+        run: make venv
 
       - name: App dependencies
-        run: |
-          pip install -U pip poetry
-          poetry install --no-dev
+        run: make app-dependencies
 
-      - name: CDK Diff ${{ env.ENVIRONMENT }}
+      - name: CDK Diff
         run: |
           cdk diff
 
-      - name: CDK Deploy ${{ env.ENVIRONMENT }}
+      - name: CDK Deploy
         run: |
           cdk --require-approval=never deploy '*'
