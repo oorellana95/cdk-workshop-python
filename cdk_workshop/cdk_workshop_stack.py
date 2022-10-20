@@ -2,8 +2,11 @@ from constructs import Construct
 from aws_cdk import (
     Stack,
     # We are importing the aws_lambda module as _lambda because lambda is a built-in identifier in Python.
-    aws_lambda as _lambda
+    aws_lambda as _lambda,
+    aws_apigateway as apigw
 )
+
+from cdk_workshop.hitcounter import HitCounter
 
 
 class CdkWorkshopStack(Stack):
@@ -20,4 +23,14 @@ class CdkWorkshopStack(Stack):
             # The name of the handler function is hello.handler (“hello” is the name of the file and “handler”
             # is the function name)
             handler='hello.handler'
+        )
+
+        hello_with_counter = HitCounter(
+            self, 'HelloHitCounter',
+            downstream=my_lambda,
+        )
+
+        apigw.LambdaRestApi(
+            self, 'Endpoint',
+            handler=hello_with_counter._handler,
         )
