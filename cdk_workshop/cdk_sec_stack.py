@@ -21,14 +21,26 @@ class CdkSECStack(Stack):
         )
 
         _lambda_retrieve_company_tickers_exchange = _lambda.Function(self, "SECRetrieveCompanyTickersExchangeLambda",
-                                                                     code=_lambda.Code.from_asset("lambda"),
+                                                                     code=_lambda.Code.from_asset(
+                                                                         "lambda",
+                                                                         bundling=cdk.BundlingOptions(
+                                                                             image=_lambda.Runtime.PYTHON_3_9.bundling_docker_image,
+                                                                             command=['bash', '-c',
+                                                                                      'pip install pandas'],
+                                                                         )),
                                                                      runtime=_lambda.Runtime.PYTHON_3_9,
                                                                      handler="sec.retrieve_company_tickers_exchange.handler",
                                                                      timeout=cdk.Duration.seconds(25))
 
         _lambda_upgrade_in_dynamodb_company_facts = _lambda.Function(self,
                                                                      "SECUpgradeInDynamoDbCompanyFactsLambda",
-                                                                     code=_lambda.Code.from_asset("lambda"),
+                                                                     code=_lambda.Code.from_asset(
+                                                                         "lambda",
+                                                                         bundling=cdk.BundlingOptions(
+                                                                             image=_lambda.Runtime.PYTHON_3_9.bundling_docker_image,
+                                                                             command=['bash', '-c',
+                                                                                      'pip install boto3'],
+                                                                         )),
                                                                      runtime=_lambda.Runtime.PYTHON_3_9,
                                                                      handler="sec.upgrade_in_dynamodb_company_facts.handler",
                                                                      environment={
