@@ -9,6 +9,7 @@ python = "3.10.*"
 constructs = "10.*"
 aws-cdk-lib = "*"
 boto3 = "*"
+pandas = "*"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
