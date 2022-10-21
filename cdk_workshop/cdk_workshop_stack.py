@@ -1,9 +1,9 @@
-from aws_cdk import Stack
-from aws_cdk import aws_apigateway as apigw
 from aws_cdk import (
-    aws_lambda as _lambda,
-)  # We are importing the aws_lambda module as _lambda because lambda is a built-in identifier in Python.
-from cdk_dynamo_table_view import TableViewer
+    Stack,
+    aws_apigateway as apigw,
+    aws_lambda as _lambda
+)
+
 from constructs import Construct
 
 from cdk_workshop.hitcounter import HitCounter
@@ -36,10 +36,3 @@ class CdkWorkshopStack(Stack):
             handler=hello_with_counter.handler,
         )
 
-        TableViewer(
-            self,
-            "ViewHitCounter",
-            title="Hello Hits",
-            table=hello_with_counter.table,
-            sort_by="-hits",
-        )
