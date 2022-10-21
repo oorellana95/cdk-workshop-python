@@ -82,4 +82,4 @@ jobs:
         run: cdk synth
 
       - name: CDK Deploy
-        run: cdk --require-approval=never deploy --all '*'
+        run: cdk --require-approval=never deploy --all
