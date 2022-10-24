@@ -1,8 +1,4 @@
-from aws_cdk import (
-    Stack,
-    aws_apigateway as apigw,
-    aws_lambda as _lambda
-)
+from aws_cdk import Stack, aws_apigateway as apigw, aws_lambda as _lambda
 
 from constructs import Construct
 
@@ -35,4 +31,3 @@ class CdkWorkshopStack(Stack):
             "Endpoint",
             handler=hello_with_counter.handler,
         )
-

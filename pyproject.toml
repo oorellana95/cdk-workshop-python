@@ -21,3 +21,12 @@ isort = "*"
 coverage = "*"
 coverage-badge = "*"
 
+[tool.flake8]
+max-line-length = 160
+exclude = [".git","__pycache__","build","dist","venv","cdk.out",".pytest_cache"]
+
+[tool.isort]
+profile="black"
+multi_line_output=8
+src_paths=["cdk_workshop/**","lambda/**"]
+skip=["venv"]
