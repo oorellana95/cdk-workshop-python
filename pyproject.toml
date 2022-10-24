@@ -21,6 +21,9 @@ isort = "*"
 coverage = "*"
 coverage-badge = "*"
 
+[tool.black]
+extend-exclude = "lambda/layers"
+
 [tool.flake8]
 max-line-length = 160
 exclude = [".git","__pycache__","build","dist","venv","cdk.out",".pytest_cache"]
