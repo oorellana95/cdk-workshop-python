@@ -9,7 +9,7 @@ python = "3.10.*"
 constructs = "10.*"
 aws-cdk-lib = "*"
 boto3 = "*"
-cdk-dynamo-table-view = "*"
+pandas = "*"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
@@ -21,3 +21,15 @@ isort = "*"
 coverage = "*"
 coverage-badge = "*"
 
+[tool.black]
+extend-exclude = "lambda/layers"
+
+[tool.flake8]
+max-line-length = 160
+exclude = [".git","__pycache__","build","dist","venv","cdk.out",".pytest_cache"]
+
+[tool.isort]
+profile="black"
+multi_line_output=8
+src_paths=["cdk_workshop/**","lambda/**"]
+skip=["venv"]
