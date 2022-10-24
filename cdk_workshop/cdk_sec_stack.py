@@ -14,39 +14,41 @@ class CdkSECStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
+        # DynamoDb Table
         _table = ddb.Table(
             self,
             "sec_company_facts",
             partition_key={"name": "ticker", "type": ddb.AttributeType.STRING}
         )
 
+        # Lambda Layers
+        _pandasLayer = _lambda.LayerVersion(self, 'pandasLayer',
+                                            code=_lambda.AssetCode('lambda/layers/pandasLayer'),
+                                            compatible_runtimes=[_lambda.Runtime.PYTHON_3_9])
+
+        _boto3Layer = _lambda.LayerVersion(self, 'boto3Layer',
+                                           code=_lambda.AssetCode('lambda/layers/boto3Layer'),
+                                           compatible_runtimes=[_lambda.Runtime.PYTHON_3_9])
+
+        # Lambdas
         _lambda_retrieve_company_tickers_exchange = _lambda.Function(self, "SECRetrieveCompanyTickersExchangeLambda",
-                                                                     code=_lambda.Code.from_asset(
-                                                                         "lambda",
-                                                                         bundling=cdk.BundlingOptions(
-                                                                             image=_lambda.Runtime.PYTHON_3_9.bundling_image,
-                                                                             command=['bash', '-c',
-                                                                                      'pip install pandas'],
-                                                                         )),
+                                                                     code=_lambda.Code.from_asset("lambda/sec"),
                                                                      runtime=_lambda.Runtime.PYTHON_3_9,
-                                                                     handler="sec.retrieve_company_tickers_exchange.handler",
+                                                                     handler="retrieve_company_tickers_exchange.handler",
+                                                                     layers=[_pandasLayer],
                                                                      timeout=cdk.Duration.seconds(25))
 
         _lambda_upgrade_in_dynamodb_company_facts = _lambda.Function(self,
                                                                      "SECUpgradeInDynamoDbCompanyFactsLambda",
-                                                                     code=_lambda.Code.from_asset(
-                                                                         "lambda",
-                                                                         bundling=cdk.BundlingOptions(
-                                                                             image=_lambda.Runtime.PYTHON_3_9.bundling_image,
-                                                                             command=['bash', '-c',
-                                                                                      'pip install boto3'],
-                                                                         )),
+                                                                     code=_lambda.Code.from_asset("lambda/sec"),
                                                                      runtime=_lambda.Runtime.PYTHON_3_9,
                                                                      handler="sec.upgrade_in_dynamodb_company_facts.handler",
+                                                                     layers=[_boto3Layer],
                                                                      environment={
                                                                          "SEC_TABLE_NAME": _table.table_name,
                                                                      })
 
+        # State Machine
         sfn.StateMachine(self,
                          "ApplicationStateMachine",
                          definition=sfn.Chain.start(
