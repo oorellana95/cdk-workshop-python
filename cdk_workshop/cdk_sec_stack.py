@@ -24,7 +24,7 @@ class CdkSECStack(Stack):
                                                                      code=_lambda.Code.from_asset(
                                                                          "lambda",
                                                                          bundling=cdk.BundlingOptions(
-                                                                             image=_lambda.Runtime.PYTHON_3_9.bundling_docker_image,
+                                                                             image=_lambda.Runtime.PYTHON_3_9.bundling_image,
                                                                              command=['bash', '-c',
                                                                                       'pip install pandas'],
                                                                          )),
@@ -37,7 +37,7 @@ class CdkSECStack(Stack):
                                                                      code=_lambda.Code.from_asset(
                                                                          "lambda",
                                                                          bundling=cdk.BundlingOptions(
-                                                                             image=_lambda.Runtime.PYTHON_3_9.bundling_docker_image,
+                                                                             image=_lambda.Runtime.PYTHON_3_9.bundling_image,
                                                                              command=['bash', '-c',
                                                                                       'pip install boto3'],
                                                                          )),
